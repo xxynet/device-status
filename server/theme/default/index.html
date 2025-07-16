@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-image: url("{{ background_url }}");
+        }
+    </style>
+</head>
+<body>
+    <div class="device-container">
+        <span class="page-title">{{ title }}</span>
+        <div class="device-cards-wrapper">
+            <span style="color: #9CA3AF;">Loading...</span>
+        </div>
+    </div>
+</body>
+<script>
+function getDeviceIcon(deviceType) {
+    if (deviceType === 'laptop') {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="13" x="3" y="4" rx="2"/><path d="M1 20h22"/></g></svg>`;
+    } else if (deviceType === 'phone') {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="12.5" height="18.5" x="5.75" y="2.75" rx="3"/><path d="M11 17.75h2"/></g></svg>`;
+    } else if (deviceType === 'server') {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><rect width="18.5" height="7.5" x="2.75" y="2.751" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" rx="2"/><circle cx="6.25" cy="6.501" r="1.25" fill="currentColor"/><circle cx="10.25" cy="6.501" r="1.25" fill="currentColor"/><rect width="18.5" height="7.5" x="2.75" y="13.749" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" rx="2"/><circle cx="6.25" cy="17.499" r="1.25" fill="currentColor"/><circle cx="10.25" cy="17.499" r="1.25" fill="currentColor"/></g></svg>`;
+    } else if (deviceType === 'tablet') {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"><rect width="18.5" height="15" x="2.75" y="4.5" rx="3"/><path d="M10 16h4"/></g></svg>`;
+    } else {
+        return '';
+    }
+}
+
+function getBatteryIcon(isPlugged) {
+    if (isPlugged) {
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 36 36"><path fill="currentColor" d="M18.59 11.77a1 1 0 0 0-1.73 1l2.5 4.34l-6.07-1l5.29 10.59a1 1 0 0 0 1.79-.89l-3.53-7.08l6.38 1.06Z" class="clr-i-outline clr-i-outline-path-1"/><path fill="currentColor" d="M25.12 4H23v-.42A1.58 1.58 0 0 0 21.42 2h-6.84A1.58 1.58 0 0 0 13 3.58V4h-2.12A1.88 1.88 0 0 0 9 5.88v26.24A1.88 1.88 0 0 0 10.88 34h14.24A1.88 1.88 0 0 0 27 32.12V5.88A1.88 1.88 0 0 0 25.12 4M25 32H11V6h4V4h6v2h4Z" class="clr-i-outline clr-i-outline-path-2"/><path fill="none" d="M0 0h36v36H0z"/></svg>'
+    } else {
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 36 36"><path fill="currentColor" d="M25.12 4H23v-.42A1.58 1.58 0 0 0 21.42 2h-6.84A1.58 1.58 0 0 0 13 3.58V4h-2.12A1.88 1.88 0 0 0 9 5.88v26.24A1.88 1.88 0 0 0 10.88 34h14.24A1.88 1.88 0 0 0 27 32.12V5.88A1.88 1.88 0 0 0 25.12 4M25 32H11V6h4V4h6v2h4Z" class="clr-i-outline clr-i-outline-path-2"/><path fill="none" d="M0 0h36v36H0z"/></svg>'
+    }
+}
+
+function getOnlineStats(lastUpdateTs) {
+    const timestamp_sec = Math.floor(Date.now() / 1000);
+    if (timestamp_sec - lastUpdateTs < 10) {
+        return `<div class="online-status-dot" style="color: #4CAF50;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 48 48"><path fill="currentColor" stroke="currentColor" stroke-width="8" d="M24 33a9 9 0 1 0 0-18a9 9 0 0 0 0 18Z"/></svg>
+                </div>
+                <span style="color: #9CA3AF;">Online</span>`
+    } else {
+        return `<div class="online-status-dot" style="color: #969696;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 48 48"><path fill="currentColor" stroke="currentColor" stroke-width="8" d="M24 33a9 9 0 1 0 0-18a9 9 0 0 0 0 18Z"/></svg>
+                </div>
+                <span style="color: #9CA3AF;">Offline</span>`
+    }
+}
+
+function renderDevices(devices) {
+    const wrapper = document.querySelector('.device-cards-wrapper');
+    wrapper.innerHTML = '';
+    devices.forEach(device => {
+        const card = document.createElement('div');
+        card.className = 'device-card';
+        card.innerHTML = `
+            <div class="device-card-top">
+                <div class="device-icon">
+                    ${getDeviceIcon(device.device_type)}
+                </div>
+                <div class="device-card-text">
+                    <div class="device-title-wrapper">
+                        <h3 class="device-name">${device.name}</h3>
+                        <div class="online-status">
+                            <div class="battery-icon">
+                                ${getBatteryIcon(device.battery_plugged)}
+                            </div>
+                            <span class="battery-digit">${device.battery_percent !== null ? device.battery_percent + '%' : '--'}</span>
+                            ${getOnlineStats(device.timestamp)}
+                        </div>
+                    </div>
+                    <p class="device-hardware">${device.hardware}</p>
+                    <p class="device-os">${device.os}</p>
+                </div>
+            </div>
+            <div class="device-info">
+                <div class="device-stats">
+                    <div class="device-stat-item">
+                        <span class="stat-value">${device.cpu_percent !== null ? device.cpu_percent + '%' : '--'}</span>
+                        <span class="stat-label">CPU</span>
+                    </div>
+                    <div class="device-stat-item">
+                        <span class="stat-value">${device.memory_percent !== null ? device.memory_percent + '%' : '--'}</span>
+                        <span class="stat-label">Mem</span>
+                    </div>
+                    <div class="device-stat-item">
+                        <span class="stat-value">${device.disk_percent !== null ? device.disk_percent + '%' : '--'}</span>
+                        <span class="stat-label">Disk</span>
+                    </div>
+                    <div class="device-stat-item">
+                        <span class="stat-value">${device.network_recv_speed !== null ? device.network_recv_speed + 'MB/s' : '--'}</span>
+                        <span class="stat-label">Net</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        wrapper.appendChild(card);
+    });
+}
+
+function fetchAndRenderDevices() {
+    fetch('/api/devices').then(r => r.json()).then(data => {
+        renderDevices(data.devices);
+    });
+}
+
+fetchAndRenderDevices();
+setInterval(fetchAndRenderDevices, {{ refresh_interval }});
+</script>
+</html>
