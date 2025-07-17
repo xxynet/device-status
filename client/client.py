@@ -179,6 +179,4 @@ while True:
         print("Status Code:", resp.status_code)
         print("Response Text:", resp.text)
 
-    print("-" * 40)
-
     time.sleep(REPORT_INTERVAL)
