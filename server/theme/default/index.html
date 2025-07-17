@@ -44,7 +44,7 @@ function getBatteryIcon(isPlugged) {
 
 function getOnlineStats(lastUpdateTs) {
     const timestamp_sec = Math.floor(Date.now() / 1000);
-    if (timestamp_sec - lastUpdateTs < 10) {
+    if (timestamp_sec - lastUpdateTs < {{ offline_interval }}) {
         return `<div class="online-status-dot" style="color: #4CAF50;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 48 48"><path fill="currentColor" stroke="currentColor" stroke-width="8" d="M24 33a9 9 0 1 0 0-18a9 9 0 0 0 0 18Z"/></svg>
                 </div>

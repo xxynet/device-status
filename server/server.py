@@ -14,6 +14,7 @@ TITLE = config.get("frontend", "title")
 THEME = config.get("frontend", "theme")
 BACKGROUND_URL = config.get("frontend", "background_url")
 REFRESH_INTERVAL = int(config.get("frontend", "refresh_interval"))*1000
+OFFLINE_INTERVAL = int(config.get("frontend", "offline_interval"))
 TOKEN = config.get("server", "token")
 DB_PATH = 'devices.db'
 
@@ -88,7 +89,7 @@ def home():
             "battery_plugged": battery_plugged
         })
     conn.close()
-    return render_template('index.html', title=TITLE, background_url=BACKGROUND_URL, refresh_interval=REFRESH_INTERVAL, devices=devices)
+    return render_template('index.html', title=TITLE, background_url=BACKGROUND_URL, refresh_interval=REFRESH_INTERVAL, offline_interval=OFFLINE_INTERVAL, devices=devices)
 
 
 @app.route('/api/report', methods=['POST'])
