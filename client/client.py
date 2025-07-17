@@ -1,5 +1,6 @@
 import psutil
 import time
+import os
 import platform
 import requests
 import logging
@@ -8,17 +9,17 @@ import configparser
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-# report settings
-SERVER_URL = config.get("report", "server")
-TOKEN = config.get("report", "token")
-REPORT_INTERVAL = int(config.get("report", "interval"))-1 # testing network speed needs 1 sec
+# --- Report settings ---
+SERVER_URL = os.getenv("SERVER_URL", config.get("report", "server"))
+TOKEN = os.getenv("TOKEN", config.get("report", "token"))
+REPORT_INTERVAL = int(os.getenv("REPORT_INTERVAL", config.get("report", "interval"))) - 1  # network needs 1 sec
 
-# device properties
-DEVICE_NAME = config.get("device", "display_name")
-DEVICE_ID = config.get("device", "id_name")
-DEVICE_TYPE = config.get("device", "type")
-DEVICE_HARDWARE = config.get("device", "hardware")
-DEVICE_OS = config.get("device", "os")
+# --- Device properties ---
+DEVICE_NAME = os.getenv("DEVICE_NAME", config.get("device", "display_name"))
+DEVICE_ID = os.getenv("DEVICE_ID", config.get("device", "id_name"))
+DEVICE_TYPE = os.getenv("DEVICE_TYPE", config.get("device", "type"))
+DEVICE_HARDWARE = os.getenv("DEVICE_HARDWARE", config.get("device", "hardware"))
+DEVICE_OS = os.getenv("DEVICE_OS", config.get("device", "os"))
 
 
 logging.basicConfig(

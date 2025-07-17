@@ -7,15 +7,16 @@ import os
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-SERVER_HOST = config.get("server", "host")
-SERVER_PORT = config.get("server", "port")
+SERVER_HOST = os.getenv("SERVER_HOST", config.get("server", "host"))
+SERVER_PORT = os.getenv("SERVER_PORT", config.get("server", "port"))
+TOKEN = os.getenv("TOKEN", config.get("server", "token"))
 
-TITLE = config.get("frontend", "title")
-THEME = config.get("frontend", "theme")
-BACKGROUND_URL = config.get("frontend", "background_url")
-REFRESH_INTERVAL = int(config.get("frontend", "refresh_interval"))*1000
-OFFLINE_INTERVAL = int(config.get("frontend", "offline_interval"))
-TOKEN = config.get("server", "token")
+TITLE = os.getenv("TITLE", config.get("frontend", "title"))
+THEME = os.getenv("THEME", config.get("frontend", "theme"))
+BACKGROUND_URL = os.getenv("BACKGROUND_URL", config.get("frontend", "background_url"))
+REFRESH_INTERVAL = int(os.getenv("REFRESH_INTERVAL", config.get("frontend", "refresh_interval"))) * 1000
+OFFLINE_INTERVAL = int(os.getenv("OFFLINE_INTERVAL", config.get("frontend", "offline_interval")))
+
 DB_PATH = 'devices.db'
 
 def init_db():
