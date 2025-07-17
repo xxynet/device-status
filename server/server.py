@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 import sqlite3
 import configparser
+import random
 import os
 
 config = configparser.ConfigParser()
@@ -193,6 +194,19 @@ def api_devices():
         })
     conn.close()
     return jsonify({'devices': devices})
+
+
+@app.route('/pic')
+def background_pic():
+    folder = f'theme/{THEME}/static/bg'
+    files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+    if not files:
+        return "No images found", 404
+
+    selected_file = random.choice(files)
+    full_path = os.path.join(folder, selected_file)
+
+    return send_file(full_path, mimetype='image/jpeg')
 
 
 if __name__ == '__main__':
