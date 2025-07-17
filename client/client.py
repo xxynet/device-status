@@ -169,8 +169,9 @@ while True:
     }
 
     resp = requests.post(f"{SERVER_URL}/api/report", json=report_data)
-    resp_json = resp.json()
+
     if resp.ok:
+        resp_json = resp.json()
         if resp_json["success"]:
             logging.info(f"Reported current device status")
         else:
