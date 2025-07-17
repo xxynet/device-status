@@ -3,6 +3,8 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
+    gap: 10px;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -53,6 +55,30 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+}
+
+.github-but {
+    /* border: #35393b solid 1px; */
+    border-radius: 7px;
+    background: rgba(24, 26, 27, 0.25);
+    backdrop-filter: blur(10px);
+    max-width: 900px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 10px;
+    height: 10px;
+    width: 60px;
+    cursor: pointer;
+}
+
+.github-icon {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .battery-icon {
