@@ -131,22 +131,44 @@ def recv_status():
                 device.get("hardware"),
                 device.get("os")
             ))
-        # Only keep the latest status
+        # # Only keep the latest status, not compatiable for older version of sqlite3
+        # c.execute('''
+        #     INSERT INTO device_status (
+        #         device_id, cpu_percent, memory_percent, disk_percent, network_recv_speed, network_send_speed, timestamp, battery_percent, battery_plugged
+        #     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        #     ON CONFLICT(device_id) DO UPDATE SET
+        #         cpu_percent=excluded.cpu_percent,
+        #         memory_percent=excluded.memory_percent,
+        #         disk_percent=excluded.disk_percent,
+        #         network_recv_speed=excluded.network_recv_speed,
+        #         network_send_speed=excluded.network_send_speed,
+        #         timestamp=excluded.timestamp,
+        #         battery_percent=excluded.battery_percent,
+        #         battery_plugged=excluded.battery_plugged
+        # ''', (
+        #     device_id,
+        #     status.get("cpu_percent"),
+        #     status.get("memory_percent"),
+        #     status.get("disk_percent"),
+        #     status.get("network_recv_speed"),
+        #     status.get("network_send_speed"),
+        #     report_data.get("timestamp"),
+        #     status.get("battery").get("percent"),
+        #     status.get("battery").get("plugged")
+        # ))
+        # try to update the existing device_status records first
         c.execute('''
-            INSERT INTO device_status (
-                device_id, cpu_percent, memory_percent, disk_percent, network_recv_speed, network_send_speed, timestamp, battery_percent, battery_plugged
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(device_id) DO UPDATE SET
-                cpu_percent=excluded.cpu_percent,
-                memory_percent=excluded.memory_percent,
-                disk_percent=excluded.disk_percent,
-                network_recv_speed=excluded.network_recv_speed,
-                network_send_speed=excluded.network_send_speed,
-                timestamp=excluded.timestamp,
-                battery_percent=excluded.battery_percent,
-                battery_plugged=excluded.battery_plugged
+            UPDATE device_status SET
+                cpu_percent = ?,
+                memory_percent = ?,
+                disk_percent = ?,
+                network_recv_speed = ?,
+                network_send_speed = ?,
+                timestamp = ?,
+                battery_percent = ?,
+                battery_plugged = ?
+            WHERE device_id = ?
         ''', (
-            device_id,
             status.get("cpu_percent"),
             status.get("memory_percent"),
             status.get("disk_percent"),
@@ -154,8 +176,29 @@ def recv_status():
             status.get("network_send_speed"),
             report_data.get("timestamp"),
             status.get("battery").get("percent"),
-            status.get("battery").get("plugged")
+            status.get("battery").get("plugged"),
+            device_id
         ))
+
+        # If no records are updated, execute insert
+        if c.rowcount == 0:
+            c.execute('''
+                INSERT INTO device_status (
+                    device_id, cpu_percent, memory_percent, disk_percent,
+                    network_recv_speed, network_send_speed, timestamp,
+                    battery_percent, battery_plugged
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                device_id,
+                status.get("cpu_percent"),
+                status.get("memory_percent"),
+                status.get("disk_percent"),
+                status.get("network_recv_speed"),
+                status.get("network_send_speed"),
+                report_data.get("timestamp"),
+                status.get("battery").get("percent"),
+                status.get("battery").get("plugged")
+            ))
         conn.commit()
         conn.close()
         return jsonify({"success": True})
