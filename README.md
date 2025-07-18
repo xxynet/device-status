@@ -2,6 +2,8 @@
 
 An elegant web page that displays your devices' status
 
+[Docs](http://docs.xuxiny.top/device-status/)
+
 ## 📷 ScreenShots
 
 ![](./Screenshots/Screenshot01.png)
