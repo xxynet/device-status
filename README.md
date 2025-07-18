@@ -23,8 +23,8 @@ First install requirements
 pip install -r requirements.txt
 ```
 
-Modify the configuration files for the server and client. ( `server/config.ini` `client/config.ini`)
+Modify the configuration file for your server. ( `server/config.ini`)
 
 Run `server/server.py` on your server
 
-Configure `client/config.ini` & run `client/client.py` on your clients respectively
+Configure `client/config.ini` & run `client/client.py` on your devices respectively
