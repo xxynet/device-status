@@ -20,6 +20,7 @@ An elegant web page that displays your devices' status
 - [ ] Support for Vercel, Netlify, Cloudflare deployment
 - [ ] Support for Docker deployment
 - [ ] Alert function (CPU, Mem>--%, device offline)
+- [ ] Display temperature information
 
 ## 🔨 Usage
 
