@@ -1,0 +1,13 @@
+[Unit]
+Description=Device Status Client
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/orangepi/homeserver/device-status
+ExecStart=/usr/bin/python3 /path/to/device-status/client.py
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
