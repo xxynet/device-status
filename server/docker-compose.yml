@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  device-status-server:
+    image: xxynet/device-status-server:latest
+    container_name: device-status-server
+    ports:
+      - "5236:5236"
+    environment:
+      # - SERVER_HOST=0.0.0.0
+      # - SERVER_PORT=5236
+      - TOKEN=token
+      - TITLE=Username's Device Status
+      # - THEME=default
+      # - BACKGROUND_URL=/pic
+      # - REFRESH_INTERVAL=3
+      # - OFFLINE_INTERVAL=10
+      # - DB_PATH=/app/data/devices.db
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

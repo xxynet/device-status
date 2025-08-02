@@ -17,8 +17,7 @@ An elegant web page that displays your devices' status
 - [x] support for displaying CPU, memory, disk, and network usage
 - [x] Support for displaying device battery, whether it is charging, and online status
 - [x] Customizable theme, background image, refresh_interval, offline_interval
-- [ ] Support for Vercel, Netlify, Cloudflare deployment
-- [ ] Support for Docker deployment
+- [x] Support for Docker deployment
 - [ ] Alert function (CPU, Mem>--%, device offline)
 - [ ] Display temperature information
 

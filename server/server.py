@@ -17,7 +17,7 @@ BACKGROUND_URL = os.getenv("BACKGROUND_URL", config.get("frontend", "background_
 REFRESH_INTERVAL = int(os.getenv("REFRESH_INTERVAL", config.get("frontend", "refresh_interval"))) * 1000
 OFFLINE_INTERVAL = int(os.getenv("OFFLINE_INTERVAL", config.get("frontend", "offline_interval")))
 
-DB_PATH = 'devices.db'
+DB_PATH = os.getenv("DB_PATH", config.get("server", "db_path"))
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
