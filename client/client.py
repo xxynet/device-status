@@ -168,16 +168,19 @@ while True:
         "timestamp": time.time()
     }
 
-    resp = requests.post(f"{SERVER_URL}/api/report", json=report_data)
+    try:
+        resp = requests.post(f"{SERVER_URL}/api/report", json=report_data)
 
-    if resp.ok:
-        resp_json = resp.json()
-        if resp_json["success"]:
-            logging.info(f"Reported current device status")
+        if resp.ok:
+            resp_json = resp.json()
+            if resp_json["success"]:
+                logging.info(f"Reported current device status")
+            else:
+                logging.error(f"Failed reporting to the server")
         else:
-            logging.error(f"Failed reporting to the server")
-    else:
-        print("Status Code:", resp.status_code)
-        print("Response Text:", resp.text)
+            print("Status Code:", resp.status_code)
+            print("Response Text:", resp.text)
+    except Exception as e:
+        logging.error(str(e))
 
     time.sleep(REPORT_INTERVAL)
